@@ -24,12 +24,17 @@
       });
 
       cover.addEventListener('dblclick',function(){
-        cover.classList.add('favorite');
         const newFav = this.dataset.id;
-
-        if (isItNewFav(newFav)){
+        
+        if(isItNewFav(newFav)){
           favoriteBooks.push(newFav);
+          cover.classList.add('favorite');
+        } else{
+          const index = favoriteBooks.indexOf(newFav);
+          favoriteBooks.splice(index, 1);
+          cover.classList.remove('favorite');
         }
+            
         console.log('favBooks: ', favoriteBooks);
       });
     }
