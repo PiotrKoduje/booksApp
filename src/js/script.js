@@ -1,12 +1,11 @@
 'use strict';
 {
-
   const booksListElement = document.querySelector('.books-list');
   const bookTemplate = document.getElementById('template-book');
   const books = dataSource.books;
   const template = Handlebars.compile(bookTemplate.innerHTML);
   const favoriteBooks = [];
-    
+      
   const render = () => {
     for(const book of books){
       const generatedHTML = template(book);
@@ -16,30 +15,25 @@
   };
 
   const initActions = () => {
-    const covers = document.querySelectorAll('.book__image');
+    booksListElement.addEventListener('dblclick',function(e){
+      const target = e.target.offsetParent;
 
-    for(const cover of covers){
-      cover.addEventListener('click',(e) => {
-        e.preventDefault();
-      });
-
-      cover.addEventListener('dblclick',function(){
-        const newFav = this.dataset.id;
+      if(target.classList.contains('book__image')){
+        const newFav = target.dataset.id;
         
         if(isItNewFav(newFav)){
           favoriteBooks.push(newFav);
-          cover.classList.add('favorite');
-        } else{
+          target.classList.add('favorite');
+        } else {
           const index = favoriteBooks.indexOf(newFav);
           favoriteBooks.splice(index, 1);
-          cover.classList.remove('favorite');
+          target.classList.remove('favorite');
         }
-            
         console.log('favBooks: ', favoriteBooks);
-      });
-    }
+      }
+    });
   };
-
+            
   const isItNewFav = (newFav) => {
     let count = 0;
     for(const fav of favoriteBooks){
