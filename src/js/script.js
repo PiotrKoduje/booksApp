@@ -7,6 +7,7 @@
   const favoriteBooks = [];
   const filters = [];
   const formElement = document.querySelector('.filters div');
+  
         
   const render = () => {
     for(const book of books){
@@ -17,12 +18,17 @@
   };
 
   const initActions = () => {
+    booksListElement.addEventListener('click', function(e){
+      const target = e.target.offsetParent;
+      if(target.tagName == 'A'){
+        e.preventDefault();
+      }
+    });
+
     booksListElement.addEventListener('dblclick',function(e){
       const target = e.target.offsetParent;
-
       if(target.classList.contains('book__image')){
         const newFav = target.dataset.id;
-          
         if(isThere(favoriteBooks, newFav)){
           favoriteBooks.push(newFav);
           target.classList.add('favorite');
@@ -31,21 +37,21 @@
           favoriteBooks.splice(index, 1);
           target.classList.remove('favorite');
         }
-        console.log('favBooks: ', favoriteBooks);
+        //console.log('favBooks: ', favoriteBooks);
       }
     });
 
     formElement.addEventListener('click', function(e){
       if(e.target.tagName === 'INPUT' && e.target.type === 'checkbox' && e.target.name === 'filter'){
         const category = e.target.value;
-          
         if(e.target.checked){
           filters.push(category);
         } else {
           const index = filters.indexOf(category);
           filters.splice(index, 1);
         }
-        console.log('filters: ',filters);
+        //console.log('filters: ',filters);
+        filterBooks();
       }
     });
   };
@@ -58,6 +64,27 @@
       }
     }
     return count === 0 ? true : false;
+  };
+
+  const filterBooks = ()=> {
+    const imagesOfBooks = document.querySelectorAll('.book__image');
+
+    for(const book of books){
+      let shouldBeHidden = false;
+      //console.log('book nr',book.id, ' :', book.details);
+      for(const category of filters){
+        if(book.details[category]){
+          shouldBeHidden = true;
+          //console.log('book nr',book.id, ' should be greyed out');
+          break;
+        }
+      }
+      if(shouldBeHidden){
+        imagesOfBooks[book.id-1].classList.add('hidden');
+      } else {
+        imagesOfBooks[book.id-1].classList.remove('hidden');
+      }
+    }
   };
 
   render();
