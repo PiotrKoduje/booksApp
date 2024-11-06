@@ -5,7 +5,9 @@
   const books = dataSource.books;
   const template = Handlebars.compile(bookTemplate.innerHTML);
   const favoriteBooks = [];
-      
+  const filters = [];
+  const formElement = document.querySelector('.filters div');
+        
   const render = () => {
     for(const book of books){
       const generatedHTML = template(book);
@@ -20,8 +22,8 @@
 
       if(target.classList.contains('book__image')){
         const newFav = target.dataset.id;
-        
-        if(isItNewFav(newFav)){
+          
+        if(isThere(favoriteBooks, newFav)){
           favoriteBooks.push(newFav);
           target.classList.add('favorite');
         } else {
@@ -32,12 +34,26 @@
         console.log('favBooks: ', favoriteBooks);
       }
     });
+
+    formElement.addEventListener('click', function(e){
+      if(e.target.tagName === 'INPUT' && e.target.type === 'checkbox' && e.target.name === 'filter'){
+        const category = e.target.value;
+          
+        if(e.target.checked){
+          filters.push(category);
+        } else {
+          const index = filters.indexOf(category);
+          filters.splice(index, 1);
+        }
+        console.log('filters: ',filters);
+      }
+    });
   };
-            
-  const isItNewFav = (newFav) => {
+              
+  const isThere = (arr,el) => {
     let count = 0;
-    for(const fav of favoriteBooks){
-      if (newFav === fav){
+    for(const element of arr){
+      if (el === element){
         count++;
       }
     }
